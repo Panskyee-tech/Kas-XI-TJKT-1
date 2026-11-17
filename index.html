@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KAS XI TJKT 1 - Aplikasi Kas Kelas Digital</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <!-- Maskot Kancil SVG -->
+        <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/>
+          <!-- Tanduk -->
+          <path d="M35 28 Q28 12 22 16 M32 22 Q24 20 22 24" stroke="#78350f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M65 28 Q72 12 78 16 M68 22 Q76 20 78 24" stroke="#78350f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <!-- Telinga -->
+          <ellipse cx="26" cy="36" rx="8" ry="5" transform="rotate(-25 26 36)" fill="#d97706"/>
+          <ellipse cx="74" cy="36" rx="8" ry="5" transform="rotate(25 74 36)" fill="#d97706"/>
+          <!-- Kepala -->
+          <circle cx="50" cy="48" r="22" fill="#f59e0b"/>
+          <path d="M34 52 Q50 70 66 52 Q62 68 50 68 Q38 68 34 52 Z" fill="#fef3c7"/>
+          <!-- Mata & Hidung -->
+          <circle cx="42" cy="45" r="3" fill="#1e293b"/>
+          <circle cx="58" cy="45" r="3" fill="#1e293b"/>
+          <circle cx="43" cy="44" r="1" fill="#ffffff"/>
+          <circle cx="59" cy="44" r="1" fill="#ffffff"/>
+          <ellipse cx="50" cy="53" rx="3.5" ry="2.5" fill="#1e293b"/>
+          <path d="M45 58 Q50 63 55 58" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Koin Emas -->
+          <circle cx="72" cy="70" r="18" fill="#facc15" stroke="#ca8a04" stroke-width="3"/>
+          <text x="72" y="76" font-family="Arial, sans-serif" font-weight="bold" font-size="14" fill="#854d0e" text-anchor="middle">Rp</text>
+        </svg>
+        <div>
+          <h1>KAS XI TJKT 1</h1>
+          <span class="subtitle">Transparan • Praktis • Anti Nunggak</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button id="btnInstallApp" class="btn btn-outline" onclick="openModal('modalInstall')">📲 Install App</button>
+        <button id="btnSwitchRole" class="btn btn-primary" onclick="toggleRoleView()">🔐 Mode Bendahara</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ==================== TAMPILAN PUBLIK (SISWA) ==================== -->
+    <section id="publicView">
+      
+      <!-- Kartu Ringkasan & Celengan Target -->
+      <div class="hero-grid">
+        <div class="card saldo-card">
+          <div class="card-header">
+            <span class="badge badge-green">● Saldo Real-Time</span>
+            <span class="info-iuran">Iuran: Rp5.000 / minggu</span>
+          </div>
+          <h2 id="displaySaldo" class="saldo-amount">Rp0</h2>
+          <div class="saldo-detail">
+            <div>
+              <small>Total Pemasukan</small>
+              <strong id="displayPemasukan" class="text-green">Rp0</strong>
+            </div>
+            <div>
+              <small>Total Pengeluaran</small>
+              <strong id="displayPengeluaran" class="text-red">Rp0</strong>
+            </div>
+          </div>
+          <button class="btn btn-success btn-block" onclick="openModal('modalBayar')">💸 Bayar Kas / Upload Bukti QRIS</button>
+        </div>
+
+        <div class="card target-card">
+          <div class="target-header">
+            <div>
+              <span class="badge badge-gold">🎯 Target Tabungan Kelas</span>
+              <h3 id="targetTitle">Acara Bakar-Bakar & Beli Perlengkapan Kelas</h3>
+            </div>
+            <!-- Ilustrasi Celengan SVG -->
+            <svg class="piggy-svg" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="40" cy="45" rx="26" ry="20" fill="#34d399"/>
+              <circle cx="63" cy="43" r="7" fill="#10b981"/>
+              <circle cx="65" cy="41" r="1.5" fill="#064e3b"/>
+              <circle cx="65" cy="45" r="1.5" fill="#064e3b"/>
+              <circle cx="53" cy="38" r="2.5" fill="#064e3b"/>
+              <rect x="33" y="24" width="14" height="4" rx="2" fill="#065f46"/>
+              <circle cx="40" cy="16" r="8" fill="#facc15" stroke="#ca8a04" stroke-width="2"/>
+              <text x="40" y="19" font-size="8" font-weight="bold" fill="#854d0e" text-anchor="middle">Rp</text>
+              <rect x="24" y="61" width="6" height="8" rx="2" fill="#059669"/>
+              <rect x="48" y="61" width="6" height="8" rx="2" fill="#059669"/>
+            </svg>
+          </div>
+
+          <div class="progress-wrapper">
+            <div class="progress-info">
+              <span id="targetProgressText">Terkumpul Rp0 / Rp1.000.000</span>
+              <strong id="targetPercent">0%</strong>
+            </div>
+            <div class="progress-bar">
+              <div id="targetProgressBar" class="progress-fill" style="width: 0%"></div>
+            </div>
+          </div>
+          <p class="target-note">Ayo lunasi kas minggu ini supaya target kelas cepat tercapai! 🚀</p>
+        </div>
+      </div>
+
+      <!-- Papan Sultan (Gamification) -->
+      <div class="card sultan-section">
+        <div class="section-title">
+          <h3>👑 Papan Sultan XI TJKT 1 (Pembayar Tercepat)</h3>
+          <span class="badge badge-gold">Minggu ke-<span id="currentWeekLabel">4</span></span>
+        </div>
+        <div id="papanSultanGrid" class="sultan-grid">
+          <!-- Diisi via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Status Pembayaran Siswa -->
+      <div class="card">
+        <div class="table-toolbar">
+          <h3>📋 Status Kas Siswa (Minggu ke-1 s.d. 4)</h3>
+          <div class="filter-group">
+            <input type="text" id="searchSiswa" placeholder="Cari nama / absen..." oninput="renderAll()">
+            <select id="filterStatus" onchange="renderAll()">
+              <option value="all">Semua Status</option>
+              <option value="lunas">Sudah Lunas</option>
+              <option value="nunggak">Menunggak</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Absen</th>
+                <th>Nama Siswa</th>
+                <th>Minggu Terbayar</th>
+                <th>Status</th>
+                <th>Keterangan</th>
+              </tr>
+            </thead>
+            <tbody id="publicStudentTable">
+              <!-- Diisi via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Transparansi Pengeluaran -->
+      <div class="card">
+        <div class="section-title">
+          <h3>🧾 Transparansi Pengeluaran Kelas</h3>
+          <span class="subtitle">Semua pengeluaran dicatat terbuka</span>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Keperluan</th>
+                <th>Nominal</th>
+              </tr>
+            </thead>
+            <tbody id="publicExpenseTable">
+              <!-- Diisi via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAMPILAN BENDAHARA (ADMIN) ==================== -->
+    <section id="adminView" class="hidden">
+      <div class="admin-banner">
+        <div>
+          <h2>🛠️ Dashboard Bendahara XI TJKT 1</h2>
+          <p>Kelola pembayaran siswa, verifikasi transfer QRIS, dan catat pengeluaran kelas.</p>
+        </div>
+        <button class="btn btn-danger" onclick="logoutAdmin()">Keluar Mode Bendahara</button>
+      </div>
+
+      <!-- Antrean Verifikasi QRIS -->
+      <div class="card">
+        <h3>⏳ Menunggu Verifikasi Transfer QRIS (<span id="pendingCount">0</span>)</h3>
+        <div id="pendingList" class="pending-grid">
+          <!-- Diisi via JavaScript -->
+        </div>
+      </div>
+
+      <!-- Kontrol Pembayaran & Tagih WA -->
+      <div class="card">
+        <div class="table-toolbar">
+          <h3>✅ Update Status Pembayaran & Tagih WhatsApp</h3>
+          <button class="btn btn-outline" onclick="addNewWeek()">➕ Tambah Minggu Tagihan Baru</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Absen</th>
+                <th>Nama Siswa</th>
+                <th>Terbayar</th>
+                <th>Tunggakan</th>
+                <th>Aksi Cepat</th>
+              </tr>
+            </thead>
+            <tbody id="adminStudentTable">
+              <!-- Diisi via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Catat Pengeluaran Baru -->
+      <div class="card">
+        <h3>💸 Catat Pengeluaran Kelas</h3>
+        <form id="expenseForm" class="expense-form" onsubmit="handleAddExpense(event)">
+          <input type="text" id="expDesc" placeholder="Contoh: Beli spidol papan tulis & penghapus" required>
+          <input type="number" id="expAmount" placeholder="Nominal (Rp)" min="500" step="500" required>
+          <button type="submit" class="btn btn-primary">Simpan Pengeluaran</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== MODAL LOGIN BENDAHARA ==================== -->
+  <div id="modalLogin" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('modalLogin')">&times;</span>
+      <h3>🔐 Login Bendahara</h3>
+      <p>Masukkan PIN Bendahara untuk mengelola kas kelas (Default PIN: <strong>1234</strong>)</p>
+      <input type="password" id="adminPinInput" placeholder="Masukkan PIN..." maxlength="6">
+      <button class="btn btn-primary btn-block" onclick="verifyAdminPin()">Masuk Dashboard</button>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL BAYAR QRIS ==================== -->
+  <div id="modalBayar" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('modalBayar')">&times;</span>
+      <h3>📱 Bayar Kas via QRIS</h3>
+      <p>Scan QRIS di bawah ini, lalu kirim konfirmasi pembayaran ke bendahara.</p>
+      
+      <div class="qris-box">
+        <div class="qris-header">QRIS KAS XI TJKT 1</div>
+        <!-- Simulasi Gambar QR Code SVG -->
+        <svg class="qris-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <rect width="120" height="120" fill="#ffffff"/>
+          <rect x="10" y="10" width="30" height="30" fill="none" stroke="#0f172a" stroke-width="6"/>
+          <rect x="18" y="18" width="14" height="14" fill="#0f172a"/>
+          <rect x="80" y="10" width="30" height="30" fill="none" stroke="#0f172a" stroke-width="6"/>
+          <rect x="88" y="18" width="14" height="14" fill="#0f172a"/>
+          <rect x="10" y="80" width="30" height="30" fill="none" stroke="#0f172a" stroke-width="6"/>
+          <rect x="18" y="88" width="14" height="14" fill="#0f172a"/>
+          <rect x="50" y="15" width="8" height="8" fill="#0f172a"/>
+          <rect x="62" y="25" width="8" height="16" fill="#0f172a"/>
+          <rect x="48" y="48" width="24" height="24" fill="#0284c7" rx="4"/>
+          <text x="60" y="64" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">Rp</text>
+          <rect x="15" y="52" width="16" height="8" fill="#0f172a"/>
+          <rect x="85" y="55" width="20" height="10" fill="#0f172a"/>
+          <rect x="52" y="85" width="12" height="20" fill="#0f172a"/>
+          <rect x="75" y="80" width="15" height="15" fill="#0f172a"/>
+          <rect x="95" y="95" width="15" height="15" fill="#0f172a"/>
+        </svg>
+        <small>a.n. Bendahara XI TJKT 1</small>
+      </div>
+
+      <form onsubmit="handlePaymentSubmit(event)">
+        <label>Pilih Nama Siswa:</label>
+        <select id="payStudentSelect" required></select>
+
+        <label>Jumlah Minggu yang Dibayar:</label>
+        <select id="payWeeksSelect">
+          <option value="1">1 Minggu (Rp5.000)</option>
+          <option value="2">2 Minggu (Rp10.000)</option>
+          <option value="4">4 Minggu / 1 Bulan (Rp20.000)</option>
+        </select>
+
+        <label>Upload Bukti Transfer (Opsional untuk demo):</label>
+        <input type="file" id="payProofFile" accept="image/*">
+
+        <button type="submit" class="btn btn-success btn-block">Kirim Konfirmasi Pembayaran</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL PANDUAN INSTALL APP ==================== -->
+  <div id="modalInstall" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('modalInstall')">&times;</span>
+      <h3>📲 Pasang Aplikasi di HP & PC</h3>
+      <p>Aplikasi <strong>KAS XI TJKT 1</strong> dirancang responsif agar nyaman dibuka di layar HP maupun Laptop/PC:</p>
+      <ul class="install-list">
+        <li><strong>Android (Chrome):</strong> Klik ikon titik tiga (⋮) di pojok kanan atas browser, lalu pilih <em>"Tambahkan ke Layar Utama" (Add to Home Screen)</em>.</li>
+        <li><strong>iPhone / iOS (Safari):</strong> Tekan ikon <em>Share</em> (kotak dengan panah ke atas), lalu pilih <em>"Add to Home Screen"</em>.</li>
+        <li><strong>PC / Laptop (Chrome / Edge):</strong> Klik ikon layar/install di ujung kanan kolom alamat URL browser untuk memasangnya sebagai aplikasi desktop.</li>
+      </ul>
+      <button class="btn btn-primary btn-block" onclick="closeModal('modalInstall')">Mengerti!</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
